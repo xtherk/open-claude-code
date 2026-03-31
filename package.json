@@ -19,7 +19,8 @@
     "prepare": "node -e \"if (!process.env.AUTHORIZED) { console.error('ERROR: Direct publishing is not allowed.\\nPlease see the release workflow documentation to publish this package.'); process.exit(1); }\"",
     "restore:sourcemap": "node ./scripts/restore-sourcemap-sources.mjs --overwrite",
     "build": "bun build src/entrypoints/cli.tsx --outdir ./dist --target node --sourcemap",
-    "smoke": "node ./dist/cli.js --version"
+    "smoke": "node ./dist/cli.js --version",
+    "dev": "node ./dist/cli.js"
   },
   "dependencies": {
     "@alcalzone/ansi-tokenize": "^0.3.0",
