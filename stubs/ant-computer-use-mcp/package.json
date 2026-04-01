@@ -1,0 +1,11 @@
+{
+  "name": "@ant/computer-use-mcp",
+  "version": "0.0.0-recovered",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./types": "./types.js",
+    "./sentinelApps": "./sentinelApps.js"
+  }
+}

@@ -1,4 +1,8 @@
+.ace-tool/
+.recovery/
 /node_modules/
 /scripts/
 /dist/
 bun.lock
+RECOVERY.md
+tsconfig.recovered.json

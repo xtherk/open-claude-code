@@ -16,15 +16,16 @@
     "url": "https://github.com/anthropics/claude-code/issues"
   },
   "scripts": {
-    "prepare": "node -e \"if (!process.env.AUTHORIZED) { console.error('ERROR: Direct publishing is not allowed.\\nPlease see the release workflow documentation to publish this package.'); process.exit(1); }\"",
-    "restore:sourcemap": "node ./scripts/restore-sourcemap-sources.mjs --overwrite",
     "build": "bun build src/entrypoints/cli.tsx --outdir ./dist --target node --sourcemap",
-    "smoke": "node ./dist/cli.js --version",
-    "dev": "node ./dist/cli.js"
+    "dev": "bun ./dist/cli.js",
+    "version": "bun ./dist/cli.js --version"
   },
   "dependencies": {
     "@alcalzone/ansi-tokenize": "^0.3.0",
     "@ant/claude-for-chrome-mcp": "./stubs/ant-claude-for-chrome-mcp",
+    "@ant/computer-use-input": "./stubs/ant-computer-use-input",
+    "@ant/computer-use-mcp": "./stubs/ant-computer-use-mcp",
+    "@ant/computer-use-swift": "./stubs/ant-computer-use-swift",
     "@anthropic-ai/bedrock-sdk": "^0.26.4",
     "@anthropic-ai/foundry-sdk": "^0.2.3",
     "@anthropic-ai/mcpb": "^2.1.2",
@@ -68,7 +69,6 @@
     "chokidar": "^5.0.0",
     "cli-boxes": "^4.0.1",
     "code-excerpt": "^4.0.0",
-    "color-diff-napi": "./stubs/color-diff-napi",
     "detect-libc": "^2.1.2",
     "diff": "^8.0.4",
     "env-paths": "^4.0.0",
@@ -79,6 +79,7 @@
     "get-east-asian-width": "^1.5.0",
     "google-auth-library": "^10.6.2",
     "graceful-fs": "^4.2.11",
+    "highlight.js": "^11.11.1",
     "human-signals": "^8.0.1",
     "indent-string": "^5.0.0",
     "jsonc-parser": "^3.3.1",
@@ -101,6 +102,7 @@
     "tree-kill": "^1.2.2",
     "turndown": "^7.2.2",
     "undici": "^7.24.6",
+    "url-handler-napi": "./stubs/url-handler-napi",
     "usehooks-ts": "^3.1.1",
     "vscode-jsonrpc": "^8.2.1",
     "ws": "^8.20.0",

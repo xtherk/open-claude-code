@@ -79,6 +79,8 @@ This repository is provided for learning, research, discussion, and reference on
 
 Users are solely responsible for evaluating and assuming all risks arising from the use of this repository, including but not limited to compliance risks, intellectual property risks, and any direct or indirect losses caused by such use.
 
+Any use of this project to infringe upon Anthropic PBC's legitimate rights and interests or to circumvent product  policies is unrelated to this project and undertaken at your own risk.
+
 If you are a relevant rights holder and believe any content in this repository should not be publicly displayed or distributed, please contact through the repository channel for handling.
 
 ## License Notice
