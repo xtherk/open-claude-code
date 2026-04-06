@@ -1,7 +1,1 @@
-export class ColorDiff {}
-
-export class ColorFile {}
-
-export function getSyntaxTheme() {
-  return null;
-}
+export * from '../../src/native-ts/color-diff/index.ts'

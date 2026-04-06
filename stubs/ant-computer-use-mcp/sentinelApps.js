@@ -1,3 +1,1 @@
-export function getSentinelCategory() {
-  return null
-}
+export * from './src/sentinelApps.ts'

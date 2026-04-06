@@ -2,5 +2,11 @@
   "name": "modifiers-napi",
   "version": "0.0.0-recovered",
   "type": "module",
-  "main": "./index.js"
+  "main": "./index.js",
+  "gypfile": true,
+  "files": [
+    "index.js",
+    "binding.gyp",
+    "src/**/*"
+  ]
 }

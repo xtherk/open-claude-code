@@ -1,8 +1,10 @@
 .ace-tool/
 .recovery/
+.idea/
 /node_modules/
-/scripts/
 /dist/
 bun.lock
 RECOVERY.md
 tsconfig.recovered.json
+/artifacts/
+/.tmp/

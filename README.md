@@ -23,19 +23,21 @@
 
 ### 私有 MCP/NAPI 兼容层进度等
 
-下面这些是当前恢复版里和 Claude 私有 MCP、native / NAPI 替代实现相关的兼容层状态。这里区分的是 **import / build 已补齐** 和 **运行时能力是否真的恢复**：
+下面这些是当前恢复版里和 Claude 私有 MCP、native / NAPI 替代实现相关的兼容层状态。这里只保留两个维度：**是否对标官方原版实现**，以及 **当前恢复程度（完成全部 / 完成大部分 / 纯降级防崩溃）**。
 
-| 组件 | 当前进度 | 可用情况 |
+| 组件 | 当前进度（对标情况） | 可用情况（恢复程度） |
 | --- | --- | --- |
-| `@ant/claude-for-chrome-mcp` | 已补最小兼容层，可正常参与构建并暴露浏览器 MCP 工具定义。 | 可列出工具、读取类接口会返回空结果或 unavailable；**不能**真正连接浏览器扩展、配对会话或执行真实浏览器桥接操作。 |
-| `@ant/computer-use-mcp` | 已补最小兼容层，主包和子路径导出都已补齐。 | 可提供 `request_access`、`list_granted_applications`、`current_display`、`switch_display`、`list_displays` 这类最小状态接口；鼠标、键盘、截图、剪贴板等真实 Computer Use 动作目前仍是占位 / unavailable。 |
-| `@ant/computer-use-input` | 已补最小 stub。 | 当前只提供 `isSupported = false` 的降级语义，用来避免缺包报错；**不提供**真实输入注入能力。 |
-| `@ant/computer-use-swift` | 已补最小 macOS 原生兼容层 shape。 | 权限、应用、显示器等查询接口会返回空值或默认值；截图、打开应用、捕获准备等原生能力仍未恢复。 |
-| `image-processor-napi` | 已用 `sharp` 做开源替代，并补上 compat 导出。 | 常规图片读取、缩放、压缩链路基本可用；但 `getNativeModule()` 当前返回 `null`，依赖原生 fast path 的图片/剪贴板逻辑会自动降级到现有 fallback。 |
-| `color-diff-napi` | 已不再依赖原生包，改为本地 TypeScript 实现。 | Structured diff 与语法高亮主链路可用；但实现基于 `highlight.js`，并非原始 native 栈 1:1 还原，像 `BAT_THEME` 这类细节仍是兼容实现。 |
-| `audio-capture-napi` | 已补最小 stub，避免 voice 功能因缺包直接崩。 | Windows 仍需要真实 native 录音 backend，当前不可用；Linux / macOS 会继续尝试走项目里已有的 `arecord` / `rec` fallback 链路，但这不等于原始 native 录音能力已经恢复。 |
+| `@ant/claude-for-chrome-mcp` | 对标官方原版 JS / Bridge 结构。 | 完成大部分；仍需 Chrome 扩展与 socket bridge 外部运行时。 |
+| `@ant/computer-use-mcp` | 对标官方原版 MCP server / tool schema。 | 完成大部分；真实执行仍依赖 input / swift 原生后端。 |
+| `@ant/computer-use-input` | 对标官方原版 `.node` prebuild。 | 完成大部分；当前主要恢复 macOS 路径。 |
+| `@ant/computer-use-swift` | 对标官方原版 `computer_use.node`。 | 完成大部分；当前主要恢复 macOS 原生链路。 |
+| `image-processor-napi` | 对标官方原版 `.node`，并补充 JS fallback。 | 完成大部分；native-first，失败时回退 `sharp`。 |
+| `color-diff-napi` | 自实现 TypeScript 兼容层。 | 完成大部分；主链路可用，但非官方 native 实现。 |
+| `audio-capture-napi` | 对标官方原版 `.node` 路径。 | 完成大部分；已恢复多平台 native 模块，仍需实机验证。 |
+| `url-handler-napi` | 对标官方原版 `.node` 路径。 | 完成大部分；当前主要恢复 macOS 原生监听。 |
+| `modifiers-napi` | 对标官方原版 Bun FFI 方案。 | 完成大部分；macOS + Bun 可用，其他环境安全降级。 |
 
-> 简单说：这些兼容层现在已经足够支撑源码恢复版继续构建、跑通主流程、做代码阅读和接口对照；其中 `image-processor-napi` 和 `color-diff-napi` 的恢复度相对更高，而 browser / computer-use / native audio 这几块仍主要停留在降级处理上。
+> 总体上：native 路径恢复以对标官方原版为主，`color-diff-napi` 为自实现兼容层，`modifiers-napi` 对标官方 Bun FFI 方案；browser / computer-use 整体链路仍需外部运行时配套。
 
 ## 环境要求
 
@@ -68,6 +70,15 @@ bun run dev 或 npm run dev
 ```bash
 bun run build 或 npm run build
 ```
+
+## 辅助脚本
+
+仓库内还提供了一组围绕源码恢复、平台二进制下载、native 依赖提取与 staging 的辅助脚本，详细用法见 [`scripts/README.md`](./scripts/README.md)。
+
+- `download-claude-binaries.cmd`：按版本批量下载各平台 Claude 二进制。
+- `extract-native-deps-from-claude.mjs`：从各平台 Claude 二进制中提取可识别的 native 依赖与报告。
+- `stage-recovered-vendor-from-artifacts.mjs`：把提取结果整理为独立的 recovered vendor/stubs 目录，便于手动覆盖或比对。
+- `restore-sourcemap-sources.mjs`：从 sourcemap 恢复源码与编译所需兼容层文件。
 
 ## 演示截图
 
